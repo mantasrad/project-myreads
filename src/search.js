@@ -8,44 +8,46 @@ class Search extends Component {
 
     state = {
       search: '',
-      isloading: true,
       foundBooks: []
     }
 
   static propTypes = {
      foundBooks: PropTypes.array.isRequired
  };
-    // updateQuery = function(query) {
-    //   this.setState((prevState) => ({ search: query.trim()}))
-    //   if (query) {
-    //     booksAPI.search(query).then((res) =>
-    //       (res > 0) ? this.setState({foundBooks: res}) : this.setState({foundBooks: []})
-    //
-    //   )
-    // } else {
-    //   this.setState({foundBooks: []})
-    // }
-    //
-    // }
+
 
 updateQuery = (query) => {
-   this.setState((prevState) => ({ search: query.trim()}))
+   this.setState({ search: query.trim()})
    if (query.length > 1) {
-     booksAPI.search(this.state.search).then((books) =>
-     books.length >= 1 ? this.setState({foundBooks: books}) : console.log('dabar undefined')
-   )}
+     booksAPI.search(this.state.search).then((books) => {
+       console.log(books);
+     books.length >= 1 ? this.setState({foundBooks: books}) : console.log('undef')
+     // this.setState({foundBooks: []})
 
-   // this.setState((prevState) => ({foundBooks: books}))
-   // (books > 0) ? this.setState({foundBooks: books.books}) : this.setState({foundBooks: []})
+  })
+
+
+ }
 
 }
 
 
-
-
     render(){
-      let searching = this.state.search;
-      let foundBooks = this.state.foundBooks;
+      let showingBooks;
+      if (this.state.search) {
+
+        const match = new RegExp(escapeRegExp(this.state.search), 'i');
+        if (typeof this.state.foundBooks !== 'undefined' && this.state.foundBooks.length >= 1) {
+
+    showingBooks = this.state.foundBooks.filter((book) => match.test(book.title));
+    console.log(this.state.foundBooks)
+    console.log(showingBooks);
+} else {
+  showingBooks = [];
+}
+      } else {
+        showingBooks = [];
+      }
 
       return(
         <div className="search-wrapper">
@@ -55,13 +57,13 @@ updateQuery = (query) => {
          <div className="searched-books">
           <ul>
 
-          {this.state.foundBooks.map((book) =>
+          {showingBooks.map((book) =>
             <li key={book.id} className="book">
             <h3 className="book-title">{book.title} </h3>
-            {
-// <img src={book.imageLinks.smallThumbnail} alt={book.title} />
 
-            }
+<img src={ (book.imageLinks) ? book.imageLinks.smallThumbnail : './noImage.png'} alt={book.title} />
+
+
 
             </li>
           )}
