@@ -18,12 +18,31 @@ this.setState({
 )
 
 
-handleClick = (book, shelf, e) => booksAPI.update(book, shelf)
-.then(() => {
-  console.log(e);
-}
+handleClick = (e) => {
+if (e.target){
+  let test;
+  let newListOfBooks = this.state.listOfBooks.map((book) => {
+    if (e.target.getAttribute('data-key') === book.id){
+    book.shelf = e.target.value;
+    test = book.shelf;
+    }
+    return book
+  })
+  booksAPI.update(e.target.getAttribute('data-key'), test).then(() => {
+    this.setState((prevState) => {
+    listOfBooks: newListOfBooks
+  })
+  console.log(this.state.listOfBooks)
+}).then(() => this.forceUpdate())
 
-);
+}
+  };
+// booksAPI.update(book, shelf)
+// .then((e) => {
+//   console.log(e);
+// }
+
+// );
 
 
 
@@ -55,14 +74,14 @@ componentDidMount() {
               <p className="book-authors">By: { book.authors.length === 1 ? book.authors : book.authors.map((author) => "\n" + author + "\n" )} </p>
               <img src={book.imageLinks.smallThumbnail} alt={book.title} className="book-cover"/>
               <span className="book-shelf-changer">
-                <select value={book.shelf ? book.shelf : 'none'} onChange={this.handleClick(book, book.shelf, e.target.value)}>
+
+                <select data-key={book.id} data-shelf={book.shelf} value={book.shelf ? book.shelf : 'none'} onChange={this.handleClick.bind(this)}>
                     <option value="read">Read</option>
                     <option value="wantToRead">Want to Read</option>
                     <option value="currentlyReading">Currently Reading</option>
                     <option value="none">none</option>
                 </select>
               </span>
-
               </li>
             )}
             </ul>
@@ -76,7 +95,7 @@ componentDidMount() {
               <p className="book-authors">By: { book.authors.length === 1 ? book.authors : book.authors.map((author) => "\n" + author + "\n" )} </p>
               <img src={book.imageLinks.smallThumbnail} alt={book.title} className="book-cover"/>
               <span className="book-shelf-changer">
-                <select value={book.shelf ? book.shelf : 'none'}>
+                <select data-key={book.id} value={book.shelf ? book.shelf : 'none'} onChange={this.handleClick.bind(this)}>
                     <option value="read">Read</option>
                     <option value="wantToRead">Want to Read</option>
                     <option value="currentlyReading">Currently Reading</option>
@@ -98,7 +117,7 @@ componentDidMount() {
               <p className="book-authors">By: { book.authors.length === 1 ? book.authors : book.authors.map((author) => "\n" + author + "\n" )} </p>
               <img src={book.imageLinks.smallThumbnail} alt={book.title} className="book-cover"/>
               <span className="book-shelf-changer">
-                <select value={book.shelf ? book.shelf : 'none'}>
+                <select data-key={book.id} value={book.shelf ? book.shelf : 'none'} onChange={this.handleClick.bind(this)}>
                     <option value="read">Read</option>
                     <option value="wantToRead">Want to Read</option>
                     <option value="currentlyReading">Currently Reading</option>
