@@ -1,60 +1,15 @@
 import React, {Component} from 'react'
 import * as booksAPI from './booksAPI'
 import PropTypes from 'prop-types'
+import App from './App.js'
 // import Search from './search.js'
 
 
 class ListBooks extends Component {
 
-  state = {
-    listOfBooks: []
-
-  }
-
-allBooks = () => booksAPI.getAll().then((books) =>
-this.setState({
-  listOfBooks: books,
-})
-)
-
-
-handleClick = (e) => {
-if (e.target){
-  let test;
-  let newListOfBooks = this.state.listOfBooks.map((book) => {
-    if (e.target.getAttribute('data-key') === book.id){
-    book.shelf = e.target.value;
-    test = book.shelf;
-    }
-    return book
-  })
-  booksAPI.update(e.target.getAttribute('data-key'), test).then(() => {
-    this.setState((prevState) => {
-    listOfBooks: newListOfBooks
-  })
-  console.log(this.state.listOfBooks)
-}).then(() => this.forceUpdate())
-
-}
-  };
-// booksAPI.update(book, shelf)
-// .then((e) => {
-//   console.log(e);
-// }
-
-// );
-
-
-
-componentDidMount() {
-    this.allBooks()
-  }
-
-
-
 
     render () {
-      let listOfBooks = this.state.listOfBooks
+      let listOfBooks = this.props.passedState.length >= 1 ? this.props.passedState : [];
       let currentlyReading = listOfBooks.filter((book)=> book.shelf === "currentlyReading");
       let wantToRead = listOfBooks.filter((book)=> book.shelf === "wantToRead");
       let read = listOfBooks.filter((book)=> book.shelf === "read");
@@ -75,7 +30,7 @@ componentDidMount() {
               <img src={book.imageLinks.smallThumbnail} alt={book.title} className="book-cover"/>
               <span className="book-shelf-changer">
 
-                <select data-key={book.id} data-shelf={book.shelf} value={book.shelf ? book.shelf : 'none'} onChange={this.handleClick.bind(this)}>
+                <select data-key={book.id} data-shelf={book.shelf} value={book.shelf ? book.shelf : 'none'} onChange={this.props.buttonPress}>
                     <option value="read">Read</option>
                     <option value="wantToRead">Want to Read</option>
                     <option value="currentlyReading">Currently Reading</option>
@@ -95,7 +50,7 @@ componentDidMount() {
               <p className="book-authors">By: { book.authors.length === 1 ? book.authors : book.authors.map((author) => "\n" + author + "\n" )} </p>
               <img src={book.imageLinks.smallThumbnail} alt={book.title} className="book-cover"/>
               <span className="book-shelf-changer">
-                <select data-key={book.id} value={book.shelf ? book.shelf : 'none'} onChange={this.handleClick.bind(this)}>
+                <select data-key={book.id} value={book.shelf ? book.shelf : 'none'} onChange={this.props.buttonPress}>
                     <option value="read">Read</option>
                     <option value="wantToRead">Want to Read</option>
                     <option value="currentlyReading">Currently Reading</option>
@@ -117,7 +72,7 @@ componentDidMount() {
               <p className="book-authors">By: { book.authors.length === 1 ? book.authors : book.authors.map((author) => "\n" + author + "\n" )} </p>
               <img src={book.imageLinks.smallThumbnail} alt={book.title} className="book-cover"/>
               <span className="book-shelf-changer">
-                <select data-key={book.id} value={book.shelf ? book.shelf : 'none'} onChange={this.handleClick.bind(this)}>
+                <select data-key={book.id} value={book.shelf ? book.shelf : 'none'} onChange={this.props.buttonPress}>
                     <option value="read">Read</option>
                     <option value="wantToRead">Want to Read</option>
                     <option value="currentlyReading">Currently Reading</option>

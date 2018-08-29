@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import * as booksAPI from './booksAPI'
 import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
-import PropTypes from 'prop-types'
+import ListBooks from './ListBooks.js'
 import { Link } from 'react-router-dom'
+import App from './App.js'
 
 class Search extends Component {
 
@@ -12,10 +12,9 @@ class Search extends Component {
       foundBooks: []
     }
 
-  static propTypes = {
-     foundBooks: PropTypes.array.isRequired
- };
-
+ //  static propTypes = {
+ //     foundBooks: PropTypes.array.isRequired
+ // };
 
 updateQuery = (query) => {
    this.setState({ search: query})
@@ -56,13 +55,14 @@ updateQuery = (query) => {
           <ul className="books-grid">
 
           {showingBooks.map((book) =>
+
             <li key={book.id} className="book">
             <h3 className="book-title">{book.title} </h3>
             <p className="book-authors">By: { book.authors ? book.authors.map((author) => "\n" + author) : "unknown" } </p>
 
 <img src={ (book.imageLinks) ? book.imageLinks.smallThumbnail : './noImage.png'} alt={book.title} className="book book-cover"/>
 <span className="book-shelf-changer">
-<select value={book.shelf ? book.shelf : 'none'}>
+<select data-key={book.id} data-shelf={book.shelf} data-book={book} value={book.shelf ? book.shelf : 'none'} onChange={this.props.buttonSearch}>
     <option value="read">Read</option>
     <option value="wantToRead">Want to Read</option>
     <option value="currentlyReading">Currently Reading</option>
